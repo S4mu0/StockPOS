@@ -1,269 +1,194 @@
 import React, { useState } from 'react';
+import { Check, Lock, X } from 'lucide-react';
+
+const plansData = [
+  {
+    id: 'free',
+    name: 'Free',
+    price: '$0',
+    period: '',
+    current: true,
+    features: [
+      { text: '1 sucursal(es)', included: true },
+      { text: '1 usuario(s)', included: true },
+      { text: '100 productos', included: true },
+      { text: 'POS completo (descuentos, pagos mixtos)', included: false },
+      { text: 'Modo offline', included: false },
+      { text: 'Lector de códigos', included: false },
+      { text: 'Tickets y etiquetas propios', included: false },
+      { text: 'Caja con turnos', included: false },
+      { text: 'Roles y permisos', included: false },
+      { text: 'Reportes históricos', included: false },
+      { text: 'Traslados entre sucursales', included: false },
+      { text: 'Catálogo online (WhatsApp)', included: false },
+      { text: 'Facturación electrónica', included: false },
+      { text: 'Auditoría', included: false },
+    ],
+  },
+  {
+    id: 'monthly',
+    name: 'Mensual (Pro)',
+    price: '$145.000',
+    period: '/mes',
+    popular: true,
+    features: [
+      { text: '3 sucursal(es)', included: true },
+      { text: '5 usuario(s)', included: true },
+      { text: '5000 productos', included: true },
+      { text: 'POS completo (descuentos, pagos mixtos)', included: true },
+      { text: 'Modo offline', included: true },
+      { text: 'Lector de códigos', included: true },
+      { text: 'Tickets y etiquetas propios', included: true },
+      { text: 'Caja con turnos', included: true },
+      { text: 'Roles y permisos', included: true },
+      { text: 'Reportes históricos', included: true },
+      { text: 'Traslados entre sucursales', included: true },
+      { text: 'Catálogo online (WhatsApp)', included: true },
+      { text: 'Facturación electrónica', included: false },
+      { text: 'Auditoría', included: true },
+    ],
+  },
+  {
+    id: 'annual',
+    name: 'Anual (Pro+)',
+    price: '$990.000',
+    period: '/año',
+    badge: 'Ahorra 2 meses',
+    features: [
+      { text: '10 sucursal(es)', included: true },
+      { text: 'Ilimitados usuario(s)', included: true },
+      { text: 'Ilimitados productos', included: true },
+      { text: 'POS completo (descuentos, pagos mixtos)', included: true },
+      { text: 'Modo offline', included: true },
+      { text: 'Lector de códigos', included: true },
+      { text: 'Tickets y etiquetas propios', included: true },
+      { text: 'Caja con turnos', included: true },
+      { text: 'Roles y permisos', included: true },
+      { text: 'Reportes históricos', included: true },
+      { text: 'Traslados entre sucursales', included: true },
+      { text: 'Catálogo online (WhatsApp)', included: true },
+      { text: 'Facturación electrónica', included: true },
+      { text: 'Auditoría', included: true },
+    ],
+  },
+];
 
 export default function Plans() {
   const [selectedPlan, setSelectedPlan] = useState(null);
-  const [loading, setLoading] = useState(false);
 
-  // Definición de precios y planes actualizados
-  const plans = [
-    {
-      id: 'free',
-      name: 'Free',
-      priceText: '$0',
-      period: 'para siempre',
-      isCurrent: true,
-      badge: null,
-      features: [
-        { name: '1 sucursal(es)', active: true },
-        { name: '1 usuario(s)', active: true },
-        { name: '100 productos', active: true },
-        { name: 'POS completo (descuentos, pagos mixtos)', active: false },
-        { name: 'Modo offline', active: false },
-        { name: 'Lector de códigos', active: false },
-        { name: 'Tickets y etiquetas propios', active: false },
-        { name: 'Caja con turnos', active: false },
-        { name: 'Roles y permisos', active: false },
-        { name: 'Reportes históricos', active: false }
-      ]
-    },
-    {
-      id: 'pro_monthly',
-      name: 'Mensual (Pro)',
-      price: 145000,
-      priceText: '$145.000',
-      period: '/mes',
-      isCurrent: false,
-      badge: 'Más flexible',
-      features: [
-        { name: '3 sucursal(es)', active: true },
-        { name: '5 usuario(s)', active: true },
-        { name: '5000 productos', active: true },
-        { name: 'POS completo (descuentos, pagos mixtos)', active: true },
-        { name: 'Modo offline', active: true },
-        { name: 'Lector de códigos', active: true },
-        { name: 'Tickets y etiquetas propios', active: true },
-        { name: 'Caja con turnos', active: true },
-        { name: 'Roles y permisos', active: true },
-        { name: 'Reportes históricos', active: true },
-        { name: 'Facturación electrónica', active: false },
-        { name: 'Auditoría', active: true }
-      ]
-    },
-    {
-      id: 'pro_annual',
-      name: 'Anual (Pro+)',
-      price: 990000,
-      priceText: '$990.000',
-      period: '/año',
-      equivalent: '≈ $82.500/mes · ¡Ahorras 43%!',
-      isCurrent: false,
-      badge: 'Mejor Valor',
-      highlight: true,
-      features: [
-        { name: '10 sucursal(es)', active: true },
-        { name: 'Ilimitados usuario(s)', active: true },
-        { name: 'Ilimitados productos', active: true },
-        { name: 'POS completo (descuentos, pagos mixtos)', active: true },
-        { name: 'Modo offline', active: true },
-        { name: 'Lector de códigos', active: true },
-        { name: 'Tickets y etiquetas propios', active: true },
-        { name: 'Caja con turnos', active: true },
-        { name: 'Roles y permisos', active: true },
-        { name: 'Reportes históricos', active: true },
-        { name: 'Facturación electrónica', active: true },
-        { name: 'Auditoría', active: true }
-      ]
-    }
-  ];
-
-  // Acción al presionar "Elegir Plan"
-  const handleSelectPlan = (plan) => {
+  const handleOpenModal = (plan) => {
     setSelectedPlan(plan);
   };
 
-  // Procesar pago (Ejemplo con simulación o redirección a pasarela)
-  const handleCheckout = async (method) => {
-    setLoading(true);
-    try {
-      if (method === 'whatsapp') {
-        const msg = encodeURIComponent(`Hola, deseo activar el *${selectedPlan.name}* por valor de *${selectedPlan.priceText}* en StockPOS.`);
-        window.open(`https://wa.me/573000000000?text=${msg}`, '_blank');
-      } else {
-        // Conexión con backend para generar Checkout URL (Stripe / Mercado Pago)
-        const response = await fetch('/api/platform/checkout', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ planId: selectedPlan.id, method })
-        });
-        const data = await response.json();
-        if (data.checkoutUrl) {
-          window.location.href = data.checkoutUrl;
-        } else {
-          alert(`Suscripción solicitada para ${selectedPlan.name}. Redirigiendo a pasarela...`);
-        }
-      }
-    } catch (err) {
-      console.error(err);
-      alert('Iniciando proceso de pago...');
-    } finally {
-      setLoading(false);
-      setSelectedPlan(null);
-    }
+  const handleCloseModal = () => {
+    setSelectedPlan(null);
+  };
+
+  const handleMercadoPago = () => {
+    alert(`Redirigiendo a Mercado Pago para el plan: ${selectedPlan.name}`);
+    // Aquí irá la redirección / link de cobro de Mercado Pago
   };
 
   return (
-    <div style={{ padding: '24px', color: '#fff', backgroundColor: '#131b26', minHeight: '100vh' }}>
-      <h1 style={{ fontSize: '28px', marginBottom: '8px', color: '#10b981' }}>Planes de Suscripción</h1>
-      <p style={{ color: '#9ca3af', marginBottom: '32px' }}>Selecciona el plan ideal para escalar tu negocio</p>
+    <div className="p-6 max-w-7xl mx-auto min-h-screen text-slate-100">
+      <h1 className="text-3xl font-bold mb-2">Planes y Suscripciones</h1>
+      <p className="text-slate-400 mb-8">Elige el plan ideal para escalar tu negocio.</p>
 
-      <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '24px' }}>
-        {plans.map((plan) => (
+      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+        {plansData.map((plan) => (
           <div
             key={plan.id}
-            style={{
-              backgroundColor: '#1f2937',
-              borderRadius: '12px',
-              padding: '24px',
-              border: plan.highlight ? '2px solid #10b981' : '1px solid #374151',
-              display: 'flex',
-              flexDirection: 'column',
-              justify: 'space-between',
-              position: 'relative'
-            }}
+            className={`relative rounded-2xl p-6 border flex flex-col justify-between transition-all ${
+              plan.popular
+                ? 'border-emerald-500 bg-slate-800/80 shadow-lg shadow-emerald-500/10'
+                : 'border-slate-700 bg-slate-800/40'
+            }`}
           >
-            {plan.badge && (
-              <span style={{
-                position: 'absolute',
-                top: '-12px',
-                right: '16px',
-                backgroundColor: plan.highlight ? '#10b981' : '#3b82f6',
-                color: '#fff',
-                fontSize: '12px',
-                padding: '4px 12px',
-                borderRadius: '12px',
-                fontWeight: 'bold'
-              }}>
-                {plan.badge}
-              </span>
-            )}
-
             <div>
-              <h2 style={{ fontSize: '20px', fontWeight: 'bold', marginBottom: '12px' }}>{plan.name}</h2>
-              <div style={{ display: 'flex', alignItems: 'baseline', gap: '4px' }}>
-                <span style={{ fontSize: '36px', fontWeight: '800' }}>{plan.priceText}</span>
-                <span style={{ color: '#9ca3af' }}>{plan.period}</span>
-              </div>
-              {plan.equivalent && (
-                <div style={{
-                  backgroundColor: 'rgba(16, 185, 129, 0.15)',
-                  color: '#34d399',
-                  padding: '4px 8px',
-                  borderRadius: '6px',
-                  fontSize: '12px',
-                  marginTop: '8px',
-                  display: 'inline-block'
-                }}>
-                  {plan.equivalent}
-                </div>
+              {plan.badge && (
+                <span className="absolute -top-3 right-6 bg-emerald-500 text-slate-950 font-bold text-xs px-3 py-1 rounded-full uppercase">
+                  {plan.badge}
+                </span>
               )}
+              <h2 className="text-xl font-bold mb-2">{plan.name}</h2>
+              <div className="flex items-baseline mb-6">
+                <span className="text-4xl font-extrabold tracking-tight">{plan.price}</span>
+                <span className="text-slate-400 ml-1 text-sm">{plan.period}</span>
+              </div>
 
-              <ul style={{ listStyle: 'none', padding: 0, margin: '24px 0' }}>
+              <ul className="space-y-3 mb-8 text-sm">
                 {plan.features.map((feat, idx) => (
-                  <li key={idx} style={{
-                    display: 'flex',
-                    alignItems: 'center',
-                    gap: '8px',
-                    marginBottom: '8px',
-                    color: feat.active ? '#e5e7eb' : '#6b7280',
-                    textDecoration: feat.active ? 'none' : 'line-through'
-                  }}>
-                    {feat.active ? '✓' : '🔒'} {feat.name}
+                  <li key={idx} className="flex items-center gap-2">
+                    {feat.included ? (
+                      <Check className="w-4 h-4 text-emerald-400 shrink-0" />
+                    ) : (
+                      <Lock className="w-4 h-4 text-amber-500/80 shrink-0" />
+                    )}
+                    <span className={feat.included ? 'text-slate-200' : 'text-slate-400'}>
+                      {feat.text}
+                    </span>
                   </li>
                 ))}
               </ul>
             </div>
 
-            {plan.isCurrent ? (
-              <button disabled style={{
-                width: '100%',
-                padding: '12px',
-                borderRadius: '8px',
-                backgroundColor: '#374151',
-                color: '#9ca3af',
-                border: 'none',
-                fontWeight: 'bold',
-                cursor: 'not-allowed'
-              }}>
-                Tu plan actual
-              </button>
-            ) : (
-              <button
-                onClick={() => handleSelectPlan(plan)}
-                style={{
-                  width: '100%',
-                  padding: '12px',
-                  borderRadius: '8px',
-                  backgroundColor: plan.highlight ? '#10b981' : '#2563eb',
-                  color: '#fff',
-                  border: 'none',
-                  fontWeight: 'bold',
-                  cursor: 'pointer'
-                }}
-              >
-                Elegir {plan.name}
-              </button>
-            )}
+            <div>
+              {plan.current ? (
+                <button
+                  disabled
+                  className="w-full py-3 px-4 rounded-xl bg-slate-700 text-slate-400 font-semibold cursor-not-allowed"
+                >
+                  Tu plan actual
+                </button>
+              ) : (
+                <button
+                  onClick={() => handleOpenModal(plan)}
+                  className="w-full py-3 px-4 rounded-xl bg-emerald-400 hover:bg-emerald-300 text-slate-950 font-bold transition-colors"
+                >
+                  Elegir {plan.name}
+                </button>
+              )}
+            </div>
           </div>
         ))}
       </div>
 
-      {/* Modal de Pago / Pasarela */}
+      {/* Modal de Pago */}
       {selectedPlan && (
-        <div style={{
-          position: 'fixed',
-          top: 0, left: 0, right: 0, bottom: 0,
-          backgroundColor: 'rgba(0,0,0,0.75)',
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-          zIndex: 1000
-        }}>
-          <div style={{
-            backgroundColor: '#1f2937',
-            padding: '32px',
-            borderRadius: '16px',
-            maxWidth: '450px',
-            width: '100%',
-            color: '#fff'
-          }}>
-            <h3 style={{ fontSize: '22px', marginBottom: '8px' }}>Confirmar Suscripción</h3>
-            <p style={{ color: '#9ca3af', marginBottom: '16px' }}>
-              Vas a adquirir el <strong>{selectedPlan.name}</strong> por <strong>{selectedPlan.priceText} {selectedPlan.period}</strong>.
+        <div className="fixed inset-0 bg-slate-950/80 backdrop-blur-sm flex items-center justify-center p-4 z-50">
+          <div className="bg-slate-900 border border-slate-700 rounded-2xl max-w-md w-full p-6 relative shadow-2xl">
+            <button
+              onClick={handleCloseModal}
+              className="absolute top-4 right-4 text-slate-400 hover:text-white"
+            >
+              <X className="w-5 h-5" />
+            </button>
+
+            <h2 className="text-2xl font-bold mb-2">Confirmar Suscripción</h2>
+            <p className="text-slate-300 mb-6">
+              Vas a adquirir el <strong className="text-white">{selectedPlan.name}</strong> por{' '}
+              <strong className="text-emerald-400">
+                {selectedPlan.price} {selectedPlan.period}
+              </strong>.
             </p>
 
-            <p style={{ fontSize: '14px', marginBottom: '12px', fontWeight: 'bold' }}>Elige tu método de pago:</p>
-            
-            <div style={{ display: 'flex', flexDirection: 'column', gap: '12px', marginBottom: '24px' }}>
+            <p className="text-sm font-semibold text-slate-300 mb-3">Elige tu método de pago:</p>
+
+            <div className="space-y-3">
               <button
-                onClick={() => handleCheckout('mercadopago')}
-                style={{ padding: '12px', backgroundColor: '#009ee3', border: 'none', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                onClick={handleMercadoPago}
+                className="w-full py-3.5 px-4 bg-sky-500 hover:bg-sky-400 text-white font-bold rounded-xl transition-colors shadow-lg shadow-sky-500/20 flex items-center justify-center gap-2"
               >
                 Mercado Pago / PSE / Tarjeta
               </button>
+
               <button
-                onClick={() => handleCheckout('whatsapp')}
-                style={{ padding: '12px', backgroundColor: '#25d366', border: 'none', color: '#fff', borderRadius: '8px', fontWeight: 'bold', cursor: 'pointer' }}
+                onClick={handleCloseModal}
+                className="w-full py-3 px-4 bg-transparent hover:bg-slate-800 border border-slate-700 text-slate-300 font-medium rounded-xl transition-colors"
               >
-                Pagar vía WhatsApp / Asesor
+                Cancelar
               </button>
             </div>
-
-            <button
-              onClick={() => setSelectedPlan(null)}
-              style={{ width: '100%', padding: '10px', backgroundColor: 'transparent', border: '1px solid #4b5563', color: '#9ca3af', borderRadius: '8px', cursor: 'pointer' }}
-            >
-              Cancelar
-            </button>
           </div>
         </div>
       )}
