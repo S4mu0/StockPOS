@@ -1,0 +1,21 @@
+import 'dotenv/config';
+import express from 'express';
+import mongoose from 'mongoose';
+import helmet from 'helmet';
+import cors from 'cors';
+import cookieParser from 'cookie-parser';
+import mongoSanitize from 'express-mongo-sanitize';
+import authRoutes from './routes/auth.js';
+import bizRoutes from './routes/business.js';
+import platformRoutes from './routes/platform.js';
+import { auth, withPlan } from './middleware/index.js';
+
+const app = express();
+app.use(helmet(), cors({ origin: process.env.CLIENT_ORIGIN, credentials: true }), express.json({ limit: '200kb' }), cookieParser(), mongoSanitize());
+app.get('/health', (_q, res) => res.json({ ok: true }));
+app.use('/api/auth', authRoutes);
+app.use('/api/platform', auth, platformRoutes);
+app.use('/api', auth, withPlan, bizRoutes);
+app.use((e, _q, res, _n) => { console.error(e); res.status(500).json({ error: 'Error interno' }); });
+await mongoose.connect(process.env.MONGO_URI);
+app.listen(4000, () => console.log('API en :4000'));
