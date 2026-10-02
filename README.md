@@ -16,3 +16,4 @@ Colaboradores: dales acceso al repo (Settings → Collaborators) y crea sus usua
 
 ## Pendiente (siguiente fase)
 2FA del panel · cola offline de ventas · caja/arqueo · clientes/proveedores · multi-sucursal real · etiquetas/ticket térmico · pagos Wompi/ePayco · catálogo WhatsApp · DIAN · tests.
+si
